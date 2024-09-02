@@ -1,0 +1,30 @@
+---
+- name: To check the memory usage and Process
+  hosts: all
+  gather_facts: false
+  become_method: sudo 
+  become: yes
+  ignore_errors: true
+  tasks:
+    - name: To Check the memory space. 
+      shell: free -h 
+      register: memory_usage
+    - name: Memory status 
+      debug:   
+       var: memory_usage.stdout_lines 
+
+
+- name: Display Most cosuming process
+  hosts: all
+  gather_facts: false
+  become_method: sudo 
+  become: yes
+  ignore_errors:
+  tasks:
+    - name: Checking top 5 process consuming more memory
+      shell: "ps -eo pid,ppid,cmd,%mem --sort=-%mem | head -n 6"
+      register: top_process
+    - name: Top Process
+      debug:
+       var: top_process.stdout_lines
+      

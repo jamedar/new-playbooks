@@ -1,0 +1,23 @@
+--- 
+- name: Check uptime and print a message if the node is up
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Check uptime
+      command: uptime
+      register: uptime_result
+      ignore_errors: yes
+      failed_when: false
+    - name: Print message if the node is up
+      debug:
+        msg: "Node {{ inventory_hostname }} is up and running. Closing the ticket"
+      when: uptime_result.rc == 0
+    - name: Print message if the node is down
+      debug: 
+       msg: "Node {{ inventory_hostname }} is not running. Need to check"
+      when: uptime_result.rc != 0
+#  rescue:
+#    - name: Handle unreachable nodes
+#      debug: 
+#       msg: "Node  {{ inventory_hostname }} is unreachable. need to check the connection"
+
