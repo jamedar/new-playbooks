@@ -1,0 +1,12 @@
+---
+- name: Check OpenSSL Version on Servers
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Check OpenSSL version
+      command: openssl version -a
+      register: openssl_version_output
+      changed_when: false
+    - name: Display OpenSSL version
+      debug:
+         msg: "{{ openssl_version_output.stdout_lines }}"
